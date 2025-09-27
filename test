@@ -1,0 +1,12 @@
+const { expect } = require("chai");
+describe("NFTCollection", function () {
+  it("mints and tracks supply", async function () {
+    const [_, user] = await ethers.getSigners();
+    const NFT = await ethers.getContractFactory("NFTCollection");
+    const nft = await NFT.deploy("ipfs://cid/");
+    await nft.deployed();
+    await expect(nft.connect(user).mint(1, { value: ethers.parseEther("0.005") })).to.not.be.reverted;
+    expect(await nft.totalSupply()).to.equal(1n);
+    expect(await nft.balanceOf(user.address)).to.equal(1n);
+  });
+});
